@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+:root {
+  /* Design Tokens from design.md */
+  --bg: #FFFFFF;
+  --surface: #F1F1F1;
+  --surface-2: #E8E8E8;
+  --ink: #1A1A1A;
+  --ink-muted: #6F6F6F;
+  --ink-faint: #C9C9C9;
+  --dark-1: #2A2A2A;
+  --dark-2: #4A4A4A;
+  --black: #0F0F0F;
+  --accent-dot: #FF1F1F;
+
+  /* Hologram gradient stops */
+  --_color---hologram--0: #f5c6ec;
+  --_color---hologram--25: #d4eef6;
+  --_color---hologram--50: #d8f5dc;
+  --_color---hologram--75: #f0e4b8;
+  --_color---hologram--100: #f9d2ca;
+  --gradient-fade: linear-gradient(180deg, #FFFFFF 0%, #D9D9D9 45%, #BDBDBD 100%);
+  --card-edge: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+
+  /* Radius Tokens */
+  --r-pill: 999px;
+  --r-card: 24px;
+  --r-tile: 32px;
+  --r-shell: 40px;
+  --r-row: 16px;
+
+  /* Spacing Tokens */
+  --space-section: 120px;
+  --space-card: 16px;
+  --gap-grid: 8px;
+  --container: 1120px;
+
+  /* Default theme fallbacks */
+  --background: #FFFFFF;
+  --foreground: #1A1A1A;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Centered container with max-width 1120px as per design.md */
+.section-container {
+  max-width: var(--container);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @media (max-width: 640px) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
