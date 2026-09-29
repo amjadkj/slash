@@ -18,6 +18,7 @@ import {
 import { LiquidMetal, liquidMetalPresets } from '@paper-design/shaders-react';
 import ScrollReveal from './ui/scroll-reveal';
 import Marquee from './ui/marquee';
+import GlassSurface from './ui/glass-surface';
 import styles from './landing-page.module.scss';
 
 // ─── Data ───────────────────────────────────────────────────────────────────
@@ -68,6 +69,19 @@ const CASE_STUDIES = [
     ],
   },
 ];
+
+// Map display name → slug used in /public/logos/<slug>.svg
+const LOGO_SLUG_MAP: Record<string, string> = {
+  'HubSpot': 'hubspot',
+  'AWS': 'amazonaws',
+  'GoHighLevel': 'gohighlevel',
+  'ActiveCampaign': 'activecampaign',
+  'ClickUp': 'clickup',
+  'WordPress': 'wordpress',
+};
+
+const getLogoSlug = (name: string) =>
+  LOGO_SLUG_MAP[name] ?? name.toLowerCase();
 
 const TECH_LOGOS_ROW1 = ['Zapier', 'HubSpot', 'Salesforce', 'Slack', 'Notion', 'Airtable', 'Stripe', 'Twilio', 'Make', 'Webflow'];
 const TECH_LOGOS_ROW2 = ['OpenAI', 'Langchain', 'Supabase', 'Firebase', 'Vercel', 'AWS', 'Retool', 'Segment', 'Intercom', 'Mailchimp'];
@@ -211,20 +225,33 @@ export default function LandingPage() {
   };
 
   const scrollToContact = () => {
-    const el = document.getElementById('contact');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+    const lenis = (window as any).lenis;
+    if (lenis) {
+      lenis.scrollTo('#contact');
+    } else {
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   // ─── Tech logo renderer ───
   const renderTechLogos = (logos: string[]) =>
-    logos.map((name) => (
-      <div key={name} className={styles.techLogoItem}>
-        <div className={styles.techLogoIcon}>{name.charAt(0)}</div>
-        <span className={styles.techLogoName}>{name}</span>
-      </div>
-    ));
+    logos.map((name) => {
+      const slug = getLogoSlug(name);
+      return (
+        <div key={name} className={styles.techLogoItem}>
+          <div className={styles.techLogoIcon}>
+            <Image
+              src={`/logos/${slug}.svg`}
+              alt={name}
+              width={18}
+              height={18}
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+          <span className={styles.techLogoName}>{name}</span>
+        </div>
+      );
+    });
 
   return (
     <div className={styles.pageWrapper}>
@@ -300,7 +327,6 @@ export default function LandingPage() {
           S1. Who We Are
           =================================================================== */}
       <section id="who-we-are" className={styles.whoWeAreSection}>
-        <div className="section-container">
           <div className={styles.whoWeAreInner}>
             <div className={styles.sectionHeader}>
               <SectionPill index="001" label="WHO WE ARE" />
@@ -332,18 +358,6 @@ export default function LandingPage() {
                     <span className={styles.marqueeStatDot} />
                   </div>
                 </Marquee>
-                {/* <Marquee direction="right" duration={30}>
-                  <div className={styles.marqueeStatText}>
-                    <span>AI-POWERED WORKFLOWS</span>
-                    <span className={styles.marqueeStatDot} />
-                    <span>ENTERPRISE-GRADE</span>
-                    <span className={styles.marqueeStatDot} />
-                    <span>24/7 AUTOMATED</span>
-                    <span className={styles.marqueeStatDot} />
-                    <span>ZERO MANUAL EFFORT</span>
-                    <span className={styles.marqueeStatDot} />
-                  </div>
-                </Marquee> */}
               </div>
 
               {/* Video card */}
@@ -358,7 +372,6 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-        </div>
       </section>
 
             {/* ===================================================================
@@ -717,16 +730,25 @@ export default function LandingPage() {
 
           <div className={styles.techEcosystemInner}>
             {/* Glowing center circle with logo */}
-            <div className={styles.techCenterCircle}>
+            <GlassSurface
+              width={140}
+              height={140}
+              borderRadius={9999}
+              brightness={20}
+              opacity={0.96}
+              backgroundOpacity={0.7}
+              blur={14}
+              saturation={1.4}
+              className={styles.techCenterCircle}
+            >
               <Image
                 src="/logo.png"
                 alt="Slash logo"
                 width={52}
                 height={52}
               />
-              <span className={styles.techCenterLabel}>Powered by Slash</span>
-              {/* <div className={styles.techCenterRing}></div> */}
-            </div>
+              <div className={styles.techCenterLabel}>Powered by Slash</div>
+            </GlassSurface>
 
             {/* 3 rows of logos */}
             <div className={styles.techMarqueeRows}>
@@ -994,7 +1016,7 @@ export default function LandingPage() {
           </div>
 
           {/* Slider pagination dots — visible only on mobile via CSS */}
-          <div className={styles.sliderDots}>
+          {/* <div className={styles.sliderDots}>
             {[0, 1, 2].map((i) => (
               <button
                 key={i}
@@ -1004,7 +1026,7 @@ export default function LandingPage() {
                 onClick={() => scrollToTestimonialSlide(i)}
               />
             ))}
-          </div>
+          </div> */}
         </div>
       </section>
       

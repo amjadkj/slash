@@ -55,6 +55,15 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Lenis smooth scroll */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
 /* Centered container with max-width 1120px as per design.md */
 .section-container {
   max-width: var(--container);
