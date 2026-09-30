@@ -130,36 +130,83 @@ export default function LandingPage() {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // ─── Timeline scroll progress ───
+  // ─── P0: LiquidMetal hero — pause shader when hero leaves viewport ───
+  const heroRef = useRef<HTMLElement>(null);
+  const [heroVisible, setHeroVisible] = useState(true);
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  // ─── P0: Timeline scroll — RAF-throttled, DOM-direct, scoped refs ───
   const timelineRef = useRef<HTMLDivElement>(null);
-  const [timelineProgress, setTimelineProgress] = useState(0);
-  const [activeSteps, setActiveSteps] = useState<boolean[]>(new Array(TIMELINE_STEPS.length).fill(false));
+  const timelineLineRef = useRef<HTMLDivElement>(null);
+  const scrollRafRef = useRef<number>(0);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const compute = () => {
       if (!timelineRef.current) return;
       const rect = timelineRef.current.getBoundingClientRect();
       const viewportTrigger = window.innerHeight * 0.55;
 
-      // Overall line fill progress
-      const totalHeight = rect.height;
-      const scrolledPast = viewportTrigger - rect.top;
-      const progress = Math.max(0, Math.min(1, scrolledPast / totalHeight));
-      setTimelineProgress(progress);
+      const progress = Math.max(0, Math.min(1, (viewportTrigger - rect.top) / rect.height));
 
-      // Per-step activation
-      const stepEls = timelineRef.current.querySelectorAll('[data-timeline-step]');
-      const newActive = [...activeSteps];
+      // Update timeline fill line directly in the DOM — no setState
+      if (timelineLineRef.current) {
+        timelineLineRef.current.style.height = `${progress * 100}%`;
+      }
+
+      const stepEls = timelineRef.current.querySelectorAll<HTMLElement>('[data-timeline-step]');
       stepEls.forEach((el, i) => {
-        const stepRect = el.getBoundingClientRect();
-        newActive[i] = stepRect.top < viewportTrigger;
+        const isActive = el.getBoundingClientRect().top < viewportTrigger;
+        const wasActive = el.dataset.active === 'true';
+        if (isActive !== wasActive) {
+          el.dataset.active = String(isActive);
+          // Toggle CSS class directly — avoids React re-render
+          el.classList.toggle('timeline-step-active', isActive);
+          const dot = el.querySelector<HTMLElement>('[data-timeline-dot]');
+          if (dot) dot.classList.toggle('timeline-dot-active', isActive);
+        }
       });
-      setActiveSteps(newActive);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // initial check
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => {
+      if (scrollRafRef.current) return; // already queued
+      scrollRafRef.current = requestAnimationFrame(() => {
+        scrollRafRef.current = 0;
+        compute();
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    compute();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
+    };
+  }, []);
+
+  // ─── P2: Marquee pause when section is off-screen ───
+  const marqueesSectionRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = marqueesSectionRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        el.querySelectorAll<HTMLElement>('[data-marquee-track]').forEach(track => {
+          track.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+        });
+      },
+      { threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
   // ─── Case study slider ───
@@ -258,9 +305,9 @@ export default function LandingPage() {
       {/* ===================================================================
           Hero Section
           =================================================================== */}
-      <section className={styles.heroSection}>
-        {/* Liquid Metal Animation Background */}
-        {mounted && (
+      <section className={styles.heroSection} ref={heroRef}>
+        {/* Liquid Metal Animation Background — only rendered while hero is visible */}
+        {mounted && heroVisible && (
           <div className={styles.heroLiquidMetal}>
             <LiquidMetal
               {...liquidMetalPresets[2]}
@@ -326,7 +373,7 @@ export default function LandingPage() {
       {/* ===================================================================
           S1. Who We Are
           =================================================================== */}
-      <section id="who-we-are" className={styles.whoWeAreSection}>
+      <section id="about" className={styles.whoWeAreSection}>
           <div className={styles.whoWeAreInner}>
             <div className={styles.sectionHeader}>
               <SectionPill index="001" label="WHO WE ARE" />
@@ -436,7 +483,7 @@ export default function LandingPage() {
       {/* ===================================================================
           4.3 Our AI-Driven Services (Bento Grid)
           =================================================================== */}
-      <section id="capabilities" className={styles.servicesSection}>
+      <section id="services" className={styles.servicesSection}>
         <div className="section-container">
           <div className={styles.sectionHeader}>
             <SectionPill index="003" label="CAPABILITIES" />
@@ -593,34 +640,33 @@ export default function LandingPage() {
           <div className={styles.timelineContainer} ref={timelineRef}>
             {/* Static background line */}
             <div className={styles.timelineLine} />
-            {/* Filled portion driven by scroll */}
+            {/* Filled portion — height driven directly by DOM in scroll handler */}
             <div
+              ref={timelineLineRef}
               className={styles.timelineLineFill}
-              style={{ height: `${timelineProgress * 100}%` }}
+              style={{ height: '0%' }}
             />
 
             <div className={styles.timelineSteps}>
-              {TIMELINE_STEPS.map((step, i) => {
-                const isActive = activeSteps[i];
-                return (
-                  <div
-                    key={step.index}
-                    data-timeline-step
-                    className={`${styles.timelineStep} ${isActive ? styles.timelineStepActive : ''}`}
-                  >
-                    <div className={styles.timelineDotWrapper}>
-                      <div className={`${styles.timelineDot} ${isActive ? styles.timelineDotActive : ''}`}>
-                        <div className={styles.timelineDotInner} />
-                      </div>
-                    </div>
-                    <div className={styles.timelineStepContent}>
-                      <div className={styles.timelineStepIndex}>{step.index}</div>
-                      <h3 className={styles.timelineStepTitle}>{step.title}</h3>
-                      <p className={styles.timelineStepDesc}>{step.desc}</p>
+              {TIMELINE_STEPS.map((step) => (
+                <div
+                  key={step.index}
+                  data-timeline-step
+                  className={styles.timelineStep}
+                >
+                  <div className={styles.timelineDotWrapper}>
+                    {/* data-timeline-dot: class toggled directly by scroll handler */}
+                    <div data-timeline-dot className={styles.timelineDot}>
+                      <div className={styles.timelineDotInner} />
                     </div>
                   </div>
-                );
-              })}
+                  <div className={styles.timelineStepContent}>
+                    <div className={styles.timelineStepIndex}>{step.index}</div>
+                    <h3 className={styles.timelineStepTitle}>{step.title}</h3>
+                    <p className={styles.timelineStepDesc}>{step.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -629,7 +675,7 @@ export default function LandingPage() {
       {/* ===================================================================
           S3. What We've Built — Case Studies
           =================================================================== */}
-      <section id="case-studies" className={styles.caseStudiesSection}>
+      <section id="projects" className={styles.caseStudiesSection}>
         <div className="section-container">
           <div className={styles.sectionHeader}>
             <SectionPill index="005" label="CASE STUDIES" />
@@ -721,7 +767,8 @@ export default function LandingPage() {
       {/* ===================================================================
           S4. Technology Ecosystem — Logo Marquee
           =================================================================== */}
-      <section id="integrations" className={styles.techEcosystemSection}>
+      {/* P2: marqueesSectionRef pauses all 3 CSS animations when off-screen */}
+      <section id="integrations" className={styles.techEcosystemSection} ref={marqueesSectionRef}>
           <div className={styles.sectionHeader}>
             <SectionPill index="006" label="INTEGRATIONS" />
             <h2>Technology Ecosystem</h2>
@@ -750,15 +797,15 @@ export default function LandingPage() {
               <div className={styles.techCenterLabel}>Powered by Slash</div>
             </GlassSurface>
 
-            {/* 3 rows of logos */}
+            {/* 3 rows of logos — data-marquee-track allows IntersectionObserver to toggle play state */}
             <div className={styles.techMarqueeRows}>
-              <Marquee direction="left" duration={35}>
+              <Marquee direction="left" duration={35} trackProps={{ 'data-marquee-track': '' }}>
                 {renderTechLogos(TECH_LOGOS_ROW1)}
               </Marquee>
-              <Marquee direction="right" duration={40}>
+              <Marquee direction="right" duration={40} trackProps={{ 'data-marquee-track': '' }}>
                 {renderTechLogos(TECH_LOGOS_ROW2)}
               </Marquee>
-              <Marquee direction="left" duration={35}>
+              <Marquee direction="left" duration={35} trackProps={{ 'data-marquee-track': '' }}>
                 {renderTechLogos(TECH_LOGOS_ROW3)}
               </Marquee>
             </div>

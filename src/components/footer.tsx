@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Check, ArrowUpRight, Sparkles } from 'lucide-react';
@@ -17,6 +17,27 @@ export default function Footer() {
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // P0: Defer shader mount until footer is near the viewport.
+  // rootMargin of 400px pre-loads the WebGL context just before scrolling in,
+  // so there's no visible pop-in while eliminating startup cost during initial load.
+  const footerRef = useRef<HTMLElement>(null);
+  const [shaderMounted, setShaderMounted] = useState(false);
+  useEffect(() => {
+    const el = footerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShaderMounted(true);
+          obs.disconnect(); // only need to trigger once
+        }
+      },
+      { rootMargin: '400px' }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,9 +59,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className={styles.footer} id="contact">
-      {/* ── Animated Wave Shader Background ─────────────────────────── */}
-      <ShaderBackground className={styles.shaderBg} />
+    <footer className={styles.footer} id="contact" ref={footerRef}>
+      {/* ── Animated Wave Shader Background — deferred until near viewport ── */}
+      {shaderMounted && <ShaderBackground className={styles.shaderBg} />}
 
       {/* ── Radial darkening overlay ─────────────────────────────────── */}
       <div className={styles.shaderOverlay} />

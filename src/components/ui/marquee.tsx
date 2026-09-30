@@ -12,6 +12,8 @@ interface MarqueeProps {
   className?: string;
   /** Pause on hover */
   pauseOnHover?: boolean;
+  /** Extra props forwarded to the animated track div (e.g. data-attributes for IntersectionObserver) */
+  trackProps?: React.HTMLAttributes<HTMLDivElement> & { [key: `data-${string}`]: string };
 }
 
 export default function Marquee({
@@ -20,6 +22,7 @@ export default function Marquee({
   duration = 30,
   className,
   pauseOnHover = false,
+  trackProps,
 }: MarqueeProps) {
   const animStyle = {
     "--marquee-duration": `${duration}s`,
@@ -32,6 +35,7 @@ export default function Marquee({
     >
       <div
         className={`${styles.track} ${direction === "right" ? styles.reverse : ""}`}
+        {...trackProps}
       >
         <div className={styles.content}>{children}</div>
         <div className={styles.content} aria-hidden="true">{children}</div>

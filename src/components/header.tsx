@@ -10,6 +10,16 @@ import styles from './header.module.scss';
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const scrollTo = (id: string) => {
+    setIsOpen(false);
+    const lenis = (window as any).lenis;
+    if (lenis) {
+      lenis.scrollTo(`#${id}`);
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className={styles.headerContainer}>
       <div className={styles.headerInner}>
@@ -64,7 +74,7 @@ export default function Header() {
             <button
               type="button"
               className={styles.connectButton}
-              onClick={() => alert("Let's Connect clicked!")}
+              onClick={() => scrollTo('contact')}
             >
               <span>Let&apos;s Connect</span>
             </button>
@@ -76,39 +86,19 @@ export default function Header() {
           <div className={styles.dropdownOverlay}>
             <nav className={styles.navGrid}>
               <div className={styles.navCol}>
-                <Link href="#about" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  About
-                </Link>
-                <Link href="#services" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  Services
-                </Link>
-                <Link href="#projects" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  Projects
-                </Link>
-                <Link href="#testimonials" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  Testimonials
-                </Link>
-                <Link href="#team" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  Team
-                </Link>
+                <button className={styles.navLink} onClick={() => scrollTo('about')}>About</button>
+                <button className={styles.navLink} onClick={() => scrollTo('services')}>Services</button>
+                <button className={styles.navLink} onClick={() => scrollTo('projects')}>Projects</button>
+                <button className={styles.navLink} onClick={() => scrollTo('testimonials')}>Testimonials</button>
+                <button className={styles.navLink} onClick={() => scrollTo('team')}>Team</button>
               </div>
 
               <div className={styles.navCol}>
-                <Link href="#values" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  Values
-                </Link>
-                <Link href="#process" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  Process
-                </Link>
-                <Link href="#integrations" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  Integrations
-                </Link>
-                <Link href="#pricing" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  Pricing
-                </Link>
-                <Link href="#faqs" className={styles.navLink} onClick={() => setIsOpen(false)}>
-                  FAQs
-                </Link>
+                <button className={styles.navLink} onClick={() => scrollTo('values')}>Values</button>
+                <button className={styles.navLink} onClick={() => scrollTo('process')}>Process</button>
+                <button className={styles.navLink} onClick={() => scrollTo('integrations')}>Integrations</button>
+                {/* <button className={styles.navLink} onClick={() => scrollTo('pricing')}>Pricing</button> */}
+                <button className={styles.navLink} onClick={() => scrollTo('faqs')}>FAQs</button>
               </div>
             </nav>
           </div>
