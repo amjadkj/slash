@@ -61,12 +61,17 @@
   max-width: 640px;
 }
 
-/* Override GlassSurface's inline width so it fills the wrapper */
+/* Override GlassSurface's inline width so it fills the wrapper, now used on a standard div */
 .glassSurface {
-  width: 100% !important;
+  width: 100%;
+  border-radius: 28px;
+  background: rgba(20, 20, 20, 0.089);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
     0 32px 64px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .cardInner {
@@ -78,6 +83,77 @@
   @media (max-width: 480px) {
     padding: 1.5rem 1rem 2rem;
   }
+}
+
+/* ==========================================================================
+   Direct Contact Info Blocks
+   ========================================================================== */
+.directContactWrap {
+  width: 100%;
+  max-width: 640px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem; // Spacing below the main form
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr; // Stack on mobile
+  }
+}
+
+.contactBlock {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08); // White-ish translucent background
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+  color: white;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.contactIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    color: white;
+  }
+}
+
+.contactDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contactLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.contactValue {
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
 }
 
 /* ---- Form headline ---- */

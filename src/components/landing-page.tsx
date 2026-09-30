@@ -118,7 +118,7 @@ export default function LandingPage() {
   }, []);
 
   // FAQ accordion state: single-row open at a time
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   // Contact form state
   const [formData, setFormData] = useState({
@@ -374,54 +374,54 @@ export default function LandingPage() {
           S1. Who We Are
           =================================================================== */}
       <section id="about" className={styles.whoWeAreSection}>
-          <div className={styles.whoWeAreInner}>
-            <div className={styles.sectionHeader}>
-              <SectionPill index="001" label="WHO WE ARE" />
+        <div className={styles.whoWeAreInner}>
+          <div className={styles.sectionHeader}>
+            <SectionPill index="001" label="WHO WE ARE" />
+          </div>
+
+          <div className={styles.whoWeAreRevealText}>
+            <ScrollReveal
+              baseOpacity={0}
+              enableBlur={true}
+              baseRotation={5}
+              blurStrength={10}
+            >
+              We help businesses build custom web and mobile applications, streamline operations with CRM and ERP solutions, and implement business management systems. From workflow and process automation to AI-powered internal and customer chatbots, we design intelligent systems that scale with you.
+            </ScrollReveal>
+          </div>
+
+          <div className={styles.whoWeAreVideoWrapper}>
+            {/* Background stat marquee text */}
+            <div className={styles.marqueeStatsBehind}>
+              <Marquee direction="left" duration={25}>
+                <div className={styles.marqueeStatText}>
+                  <span>5X FASTER RESPONSE</span>
+                  <span className={styles.marqueeStatDot} />
+                  <span>600+ SAVED HOURS</span>
+                  <span className={styles.marqueeStatDot} />
+                  <span>40% MORE CONVERSIONS</span>
+                  <span className={styles.marqueeStatDot} />
+                  <span>50% LESS ADMIN</span>
+                  <span className={styles.marqueeStatDot} />
+                </div>
+              </Marquee>
             </div>
 
-            <div className={styles.whoWeAreRevealText}>
-              <ScrollReveal
-                baseOpacity={0}
-                enableBlur={true}
-                baseRotation={5}
-                blurStrength={10}
-              >
-                We help businesses build custom web and mobile applications, streamline operations with CRM and ERP solutions, and implement business management systems. From workflow and process automation to AI-powered internal and customer chatbots, we design intelligent systems that scale with you.
-              </ScrollReveal>
-            </div>
-
-            <div className={styles.whoWeAreVideoWrapper}>
-              {/* Background stat marquee text */}
-              <div className={styles.marqueeStatsBehind}>
-                <Marquee direction="left" duration={25}>
-                  <div className={styles.marqueeStatText}>
-                    <span>5X FASTER RESPONSE</span>
-                    <span className={styles.marqueeStatDot} />
-                    <span>600+ SAVED HOURS</span>
-                    <span className={styles.marqueeStatDot} />
-                    <span>40% MORE CONVERSIONS</span>
-                    <span className={styles.marqueeStatDot} />
-                    <span>50% LESS ADMIN</span>
-                    <span className={styles.marqueeStatDot} />
-                  </div>
-                </Marquee>
-              </div>
-
-              {/* Video card */}
-              <div className={styles.whoWeAreVideoCard}>
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  src="/assets/Cursor_typing_slash_logo_animation_20260918195311.mp4"
-                />
-              </div>
+            {/* Video card */}
+            <div className={styles.whoWeAreVideoCard}>
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                src="/assets/Cursor_typing_slash_logo_animation_20260918195311.mp4"
+              />
             </div>
           </div>
+        </div>
       </section>
 
-            {/* ===================================================================
+      {/* ===================================================================
           4.2 Why Choose Us?
           =================================================================== */}
       <section id="values" className={styles.whyChooseUsSection}>
@@ -479,7 +479,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      
+
       {/* ===================================================================
           4.3 Our AI-Driven Services (Bento Grid)
           =================================================================== */}
@@ -769,51 +769,51 @@ export default function LandingPage() {
           =================================================================== */}
       {/* P2: marqueesSectionRef pauses all 3 CSS animations when off-screen */}
       <section id="integrations" className={styles.techEcosystemSection} ref={marqueesSectionRef}>
-          <div className={styles.sectionHeader}>
-            <SectionPill index="006" label="INTEGRATIONS" />
-            <h2>Technology Ecosystem</h2>
-            <p>Connecting the platforms that power your business.</p>
+        <div className={styles.sectionHeader}>
+          <SectionPill index="006" label="INTEGRATIONS" />
+          <h2>Technology Ecosystem</h2>
+          <p>Connecting the platforms that power your business.</p>
+        </div>
+
+        <div className={styles.techEcosystemInner}>
+          {/* Glowing center circle with logo */}
+          <GlassSurface
+            width={140}
+            height={140}
+            borderRadius={9999}
+            brightness={20}
+            opacity={0.96}
+            backgroundOpacity={0.7}
+            blur={14}
+            saturation={1.4}
+            className={styles.techCenterCircle}
+          >
+            <Image
+              src="/logo.png"
+              alt="Slash logo"
+              width={52}
+              height={52}
+            />
+            <div className={styles.techCenterLabel}>Powered by Slash</div>
+          </GlassSurface>
+
+          {/* 3 rows of logos — data-marquee-track allows IntersectionObserver to toggle play state */}
+          <div className={styles.techMarqueeRows}>
+            <Marquee direction="left" duration={35} trackProps={{ 'data-marquee-track': '' }}>
+              {renderTechLogos(TECH_LOGOS_ROW1)}
+            </Marquee>
+            <Marquee direction="right" duration={40} trackProps={{ 'data-marquee-track': '' }}>
+              {renderTechLogos(TECH_LOGOS_ROW2)}
+            </Marquee>
+            <Marquee direction="left" duration={35} trackProps={{ 'data-marquee-track': '' }}>
+              {renderTechLogos(TECH_LOGOS_ROW3)}
+            </Marquee>
           </div>
 
-          <div className={styles.techEcosystemInner}>
-            {/* Glowing center circle with logo */}
-            <GlassSurface
-              width={140}
-              height={140}
-              borderRadius={9999}
-              brightness={20}
-              opacity={0.96}
-              backgroundOpacity={0.7}
-              blur={14}
-              saturation={1.4}
-              className={styles.techCenterCircle}
-            >
-              <Image
-                src="/logo.png"
-                alt="Slash logo"
-                width={52}
-                height={52}
-              />
-              <div className={styles.techCenterLabel}>Powered by Slash</div>
-            </GlassSurface>
-
-            {/* 3 rows of logos — data-marquee-track allows IntersectionObserver to toggle play state */}
-            <div className={styles.techMarqueeRows}>
-              <Marquee direction="left" duration={35} trackProps={{ 'data-marquee-track': '' }}>
-                {renderTechLogos(TECH_LOGOS_ROW1)}
-              </Marquee>
-              <Marquee direction="right" duration={40} trackProps={{ 'data-marquee-track': '' }}>
-                {renderTechLogos(TECH_LOGOS_ROW2)}
-              </Marquee>
-              <Marquee direction="left" duration={35} trackProps={{ 'data-marquee-track': '' }}>
-                {renderTechLogos(TECH_LOGOS_ROW3)}
-              </Marquee>
-            </div>
-
-            <p className={styles.techCaption}>
-              Our automation architecture connects data, workflows, and platforms into a secure, high-performance system that grows with you.
-            </p>
-          </div>
+          <p className={styles.techCaption}>
+            Our automation architecture connects data, workflows, and platforms into a secure, high-performance system that grows with you.
+          </p>
+        </div>
       </section>
 
       {/* ===================================================================
@@ -1076,7 +1076,7 @@ export default function LandingPage() {
           </div> */}
         </div>
       </section>
-      
+
       {/* ===================================================================
           S5. Meet the Conicorn's Minds — Team
           =================================================================== */}
@@ -1107,7 +1107,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-        
+
       {/* ===================================================================
           4.4 Common Questions (FAQ) & 4.5 Contact Form Wrapper
           =================================================================== */}
@@ -1166,7 +1166,9 @@ export default function LandingPage() {
                     </button>
                     <div className={`${styles.faqAnswerCollapse} ${isOpen ? styles.open : ''}`}>
                       <div className={styles.faqAnswerInner}>
-                        {faq.a}
+                        <div className={styles.faqAnswerContent}>
+                          {faq.a}
+                        </div>
                       </div>
                     </div>
                   </div>

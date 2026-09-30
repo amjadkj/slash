@@ -351,7 +351,10 @@ export function ShaderBackground({ className }: { className?: string }) {
     const timeAnimated = Math.abs(UNIFORMS.timeScale) > 0.0001
 
     const resizeCanvas = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      // PERFORMANCE TWEAK: Cap Device Pixel Ratio at 1 instead of 2.
+      // For even more compression/speed, you can hardcode this to 0.75 or 0.5.
+      // Abstract shaders look fine when upscaled, but are deadly if rendered at 4k/Retina.
+      const dpr = Math.min(window.devicePixelRatio || 1, 1) * 0.75; 
       const rawW = Math.max(1, Math.round(bounds.width * dpr))
       const rawH = Math.max(1, Math.round(bounds.height * dpr))
       const ps = Math.min(1, Math.sqrt(2_000_000 / Math.max(1, rawW * rawH)))

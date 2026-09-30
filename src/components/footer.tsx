@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Check, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Check, ArrowUpRight, Sparkles, Mail } from 'lucide-react';
 import GlassSurface from '@/components/ui/glass-surface';
 import { ShaderBackground } from '@/components/ui/waves-background';
 import styles from './footer.module.scss';
@@ -70,21 +70,11 @@ export default function Footer() {
         <div className={styles.footerTop}>
         {/* ── Contact Form (GlassSurface card) ────────────────────────── */}
         <div className={styles.glassFormWrap}>
-          <GlassSurface
-            width="100%"
-            height="auto"
-            borderRadius={28}
-            borderWidth={0.07}
-            brightness={40}
-            opacity={0.88}
-            blur={14}
-            backgroundOpacity={0.1}
-            className={styles.glassSurface}
-          >
+          <div className={styles.glassSurface}>
             <div className={styles.cardInner}>
               {/* Form headline */}
               <div className={styles.formHeader}>
-                <Sparkles className={styles.sparkleIcon} />
+                {/* <Sparkles className={styles.sparkleIcon} /> */}
                 <h3>Your Competitors Are Automating. Are you?</h3>
                 <p>Stop wasting time on manual processes. Start building a self-running business.</p>
               </div>
@@ -150,9 +140,36 @@ export default function Footer() {
                 </form>
               )}
             </div>
-          </GlassSurface>
+          </div>
+          </div>
         </div>
+        
+        {/* ── Direct Contact Blocks (Phone & Email) ── */}
+        <div className={styles.directContactWrap}>
+          <a href="tel:+917907188118" className={styles.contactBlock}>
+            <div className={styles.contactIcon}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </div>
+            <div className={styles.contactDetails}>
+              <span className={styles.contactLabel}>Call Us</span>
+              <span className={styles.contactValue}>+91 7907188118</span>
+            </div>
+          </a>
+
+          <a href="mailto:message.slash@gmail.com" className={styles.contactBlock}>
+            <div className={styles.contactIcon}>
+              <Mail size={18} />
+            </div>
+            <div className={styles.contactDetails}>
+              <span className={styles.contactLabel}>Email Us</span>
+              <span className={styles.contactValue}>message.slash@gmail.com</span>
+            </div>
+          </a>
         </div>
+        {/* </div> */}
+
         {/* ── Social Links ─────────────────────────────────────────────── */}
         <div className={styles.socialRow}>
           {[

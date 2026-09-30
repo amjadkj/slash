@@ -1644,6 +1644,10 @@
 
   .faqAnswerInner {
     overflow: hidden;
+    min-height: 0;
+  }
+
+  .faqAnswerContent {
     padding: 0 14px 14px 42px;
     font-size: 11px;
     line-height: 1.5;
