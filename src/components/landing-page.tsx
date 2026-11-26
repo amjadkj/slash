@@ -1040,14 +1040,14 @@ export default function LandingPage() {
                   className={styles.videoBgImage}
                 />
                 <div className={styles.videoOverlay} />
-                <button
+                {/* <button
                   type="button"
                   className={styles.playBtnCircle}
                   aria-label="Play video"
                   onClick={() => alert("Video playback demo")}
                 >
                   <Play />
-                </button>
+                </button> */}
                 <div className={styles.videoBottom}>
                   <div className={styles.videoLogo}>
                     <span />
@@ -1240,20 +1240,20 @@ export default function LandingPage() {
                   className={styles.videoBgImage}
                 />
                 <div className={styles.videoOverlay} />
-                <button
+                {/* <button
                   type="button"
                   className={styles.playBtnCircle}
                   aria-label="Play video"
                   onClick={() => alert("Video playback demo")}
                 >
                   <Play />
-                </button>
+                </button> */}
                 <div className={styles.videoBottom}>
                   <div className={styles.videoLogo}>
                     <span />
-                    Logoipsum
+                    Jithin Sah
                   </div>
-                  <h4>Scaling SaaS Operations with AI Automation</h4>
+                  <h4>A website that finally speaks for our brand</h4>
                 </div>
               </div>
 
