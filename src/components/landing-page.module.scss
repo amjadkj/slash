@@ -228,7 +228,8 @@
   color: var(--ink);
   margin: 0 0 1.25rem 0;
   max-width: 760px;
-  background: -webkit-linear-gradient(left, #ef83db, #87d3ea, #78f989, #fce182, #fdab9b);
+  // background: -webkit-linear-gradient(left, #ef83db, #87d3ea, #78f989, #fce182, #fdab9b);
+  background: black;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -572,6 +573,7 @@
 .caseStudyImageWrap {
   position: relative;
   overflow: hidden;
+  object-fit: contain !important;
   min-height: 320px;
 
   @media (max-width: 768px) {

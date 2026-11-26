@@ -1,8 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, TouchEvent as ReactTouchEvent } from 'react';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  TouchEvent as ReactTouchEvent,
+} from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   Sparkles,
   Rocket,
@@ -13,95 +19,171 @@ import {
   ArrowRight,
   ArrowDown,
   ChevronLeft,
-  ChevronRight
-} from 'lucide-react';
-import { LiquidMetal, liquidMetalPresets } from '@paper-design/shaders-react';
-import ScrollReveal from './ui/scroll-reveal';
-import Marquee from './ui/marquee';
-import GlassSurface from './ui/glass-surface';
-import styles from './landing-page.module.scss';
+  ChevronRight,
+} from "lucide-react";
+import { LiquidMetal, liquidMetalPresets } from "@paper-design/shaders-react";
+import ScrollReveal from "./ui/scroll-reveal";
+import Marquee from "./ui/marquee";
+import GlassSurface from "./ui/glass-surface";
+import styles from "./landing-page.module.scss";
+import { link } from "fs";
 
 // ─── Data ───────────────────────────────────────────────────────────────────
 
 const TIMELINE_STEPS = [
-  { index: '01', title: 'Discovery & Audit', desc: 'We assess your current workflows, tech stack, and pain points to identify the highest-impact automation opportunities.' },
-  { index: '02', title: 'Automation Blueprint', desc: 'A tailored roadmap mapping every integration, trigger, and decision-logic pathway before a single line of code is written.' },
-  { index: '03', title: 'Build & Integration', desc: 'We develop, wire, and connect each system—CRM, marketing, internal tools—into one intelligent, automated architecture.' },
-  { index: '04', title: 'Testing & Optimization', desc: 'Rigorous QA, load testing, and edge-case validation ensure your automations perform flawlessly under real-world conditions.' },
-  { index: '05', title: 'Deployment & Scaling', desc: 'We launch, monitor, and continuously refine your systems to scale seamlessly with your business growth.' },
+  {
+    index: "01",
+    title: "Discovery & Audit",
+    desc: "We assess your current workflows, tech stack, and pain points to identify the highest-impact automation opportunities.",
+  },
+  {
+    index: "02",
+    title: "Automation Blueprint",
+    desc: "A tailored roadmap mapping every integration, trigger, and decision-logic pathway before a single line of code is written.",
+  },
+  {
+    index: "03",
+    title: "Build & Integration",
+    desc: "We develop, wire, and connect each system—CRM, marketing, internal tools—into one intelligent, automated architecture.",
+  },
+  {
+    index: "04",
+    title: "Testing & Optimization",
+    desc: "Rigorous QA, load testing, and edge-case validation ensure your automations perform flawlessly under real-world conditions.",
+  },
+  {
+    index: "05",
+    title: "Deployment & Scaling",
+    desc: "We launch, monitor, and continuously refine your systems to scale seamlessly with your business growth.",
+  },
 ];
 
 const CASE_STUDIES = [
   {
-    image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=800&q=80',
-    clientInitial: 'S',
-    clientName: 'Skyline Realty',
-    title: 'AI Workflow Automation for SaaS Company',
-    desc: 'We replaced manual lead routing and follow-up processes with an intelligent pipeline that auto-scores, assigns, and nurtures prospects in real time.',
+    image: "/petalsimg.png",
+    clientInitial: "P",
+    clientName: "Petals Child Development Centre",
+    title: "AI-Powered ERP for Child Development & Care",
+    desc: "We developed a comprehensive ERP platform that brings every aspect of child development centre operations into one intelligent system. Powered by in-house AI, Petals automates workflows, simplifies documentation, and helps care professionals work smarter and faster.",
     stats: [
-      { value: '+40%', label: 'Demo Booking' },
-      { value: '+25%', label: 'Closing Rate' },
-      { value: '3x', label: 'Engagement' },
+      { value: "360°", label: "Experience Design" },
+      { value: "AI-Powered", label: "Workflow Efficiency" },
+      { value: "1 Platform", label: "Complete Operations" },
+    ],
+    link: "https://petalscdc.com/",
+  },
+  {
+    image: "/steelhouse.png",
+    clientInitial: "S",
+    clientName: "Steel House Perumbavoor",
+    title: "Immersive Website Design & Development",
+    desc: "We designed and developed an immersive digital experience for Steel House, transforming its traditional product catalogue into a visually engaging online presence. Through cinematic visuals, interactive animations and intuitive product storytelling, we brought its steel and construction materials range to life.",
+    stats: [
+      { value: "UI/UX", label: "Experience Design" },
+      { value: "+50%", label: "Conversion Rate" },
+      { value: "2x", label: "Qualified Leads" },
+    ],
+    link: "https://www.steelhouseperumbavoor.in/",
+  },
+  {
+    image: "/lawfirm.png",
+    clientInitial: "P",
+    clientName: "Puzhithara Law Firm",
+    title: "Custom Legal Case Management System",
+    desc: "We developed a centralized operations platform for Puzhithara Law Firm, simplifying case management, client records and daily legal workflows. By bringing essential information into one organized system, we enabled more efficient case tracking, streamlined administration and better operational visibility.",
+    stats: [
+      { value: "+35%", label: "Enrollment Conversion" },
+      { value: "Centralized", label: "Client Records" },
+      { value: "Smart", label: "Workflows" },
     ],
   },
   {
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
-    clientInitial: 'N',
-    clientName: 'Nexora Digital',
-    title: 'End-to-End CRM & Marketing Automation',
-    desc: 'Unified CRM, email sequences, and reporting into a single automated ecosystem—freeing 30+ hours per week of manual work.',
+    image: "/jb.png",
+    clientInitial: "JB",
+    clientName: "JB Timber Tech Solutions",
+    title: "Immersive Digital Experience for Plywood Manufacturing",
+    desc: "We designed and developed a premium digital experience for JB Timber Tech Solution, bringing its plywood manufacturing capabilities and product range to life. Through immersive visual storytelling, interactive production journeys and modern design, we created a digital platform that communicates craftsmanship, manufacturing excellence and brand credibility.",
     stats: [
-      { value: '30+', label: 'Hours Saved / Week' },
-      { value: '+50%', label: 'Pipeline Visibility' },
-      { value: '2x', label: 'Qualified Leads' },
+      { value: "+20%", label: "Client Conversion" },
+      { value: "3D & Motion", label: "Visual Storytelling" },
+      { value: "SEO", label: "Online Visibility" },
     ],
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80',
-    clientInitial: 'B',
-    clientName: 'BrightPath SaaS',
-    title: 'AI Chatbot for Lead Qualification & Booking',
-    desc: 'Deployed a 24/7 conversational agent that qualifies, scores, and books demos automatically—dramatically reducing response times.',
-    stats: [
-      { value: '+35%', label: 'Enrollment Conversion' },
-      { value: '5s', label: 'Avg Response Time' },
-      { value: '-50%', label: 'Admin Work' },
-    ],
+    link: "https://jbtimbertech.in/",
   },
 ];
 
 // Map display name → slug used in /public/logos/<slug>.svg
 const LOGO_SLUG_MAP: Record<string, string> = {
-  'HubSpot': 'hubspot',
-  'AWS': 'amazonaws',
-  'GoHighLevel': 'gohighlevel',
-  'ActiveCampaign': 'activecampaign',
-  'ClickUp': 'clickup',
-  'WordPress': 'wordpress',
+  HubSpot: "hubspot",
+  AWS: "amazonaws",
+  GoHighLevel: "gohighlevel",
+  ActiveCampaign: "activecampaign",
+  ClickUp: "clickup",
+  WordPress: "wordpress",
 };
 
-const getLogoSlug = (name: string) =>
-  LOGO_SLUG_MAP[name] ?? name.toLowerCase();
+const getLogoSlug = (name: string) => LOGO_SLUG_MAP[name] ?? name.toLowerCase();
 
-const TECH_LOGOS_ROW1 = ['Zapier', 'HubSpot', 'Salesforce', 'Slack', 'Notion', 'Airtable', 'Stripe', 'Twilio', 'Make', 'Webflow'];
-const TECH_LOGOS_ROW2 = ['OpenAI', 'Langchain', 'Supabase', 'Firebase', 'Vercel', 'AWS', 'Retool', 'Segment', 'Intercom', 'Mailchimp'];
-const TECH_LOGOS_ROW3 = ['Calendly', 'GoHighLevel', 'Typeform', 'Shopify', 'WordPress', 'Monday', 'Pipedrive', 'ActiveCampaign', 'ClickUp', 'Zendesk'];
+const TECH_LOGOS_ROW1 = [
+  "Zapier",
+  "HubSpot",
+  "Salesforce",
+  "Slack",
+  "Notion",
+  "Airtable",
+  "Stripe",
+  "Twilio",
+  "Make",
+  "Webflow",
+];
+const TECH_LOGOS_ROW2 = [
+  "OpenAI",
+  "Langchain",
+  "Supabase",
+  "Firebase",
+  "Vercel",
+  "AWS",
+  "Retool",
+  "Segment",
+  "Intercom",
+  "Mailchimp",
+];
+const TECH_LOGOS_ROW3 = [
+  "Calendly",
+  "GoHighLevel",
+  "Typeform",
+  "Shopify",
+  "WordPress",
+  "Monday",
+  "Pipedrive",
+  "ActiveCampaign",
+  "ClickUp",
+  "Zendesk",
+];
 
 const TEAM_MEMBERS = [
   {
-    name: 'Mohammed Faaraz ',
-    role: 'Co-Founder',
-    photo: '/faaraz.webp',
+    name: "Mohammed Faaraz ",
+    role: "Co-Founder",
+    photo: "/faaraz.webp",
   },
   {
-    name: 'Amjad K Jabir',
-    role: 'Co-Founder',
-    photo: '/Amjad.webp',
+    name: "Amjad K Jabir",
+    role: "Co-Founder",
+    photo: "/Amjad.webp",
   },
 ];
 
 // Reusable Section Pill [ index ● LABEL ]
-function SectionPill({ index, label, hasAccent = false }: { index?: string; label: string; hasAccent?: boolean }) {
+function SectionPill({
+  index,
+  label,
+  hasAccent = false,
+}: {
+  index?: string;
+  label: string;
+  hasAccent?: boolean;
+}) {
   return (
     <div className={styles.sectionPill}>
       {index && <span className={styles.pillIndex}>{index}</span>}
@@ -122,10 +204,10 @@ export default function LandingPage() {
 
   // Contact form state
   const [formData, setFormData] = useState({
-    name: '',
-    company: '',
-    email: '',
-    message: ''
+    name: "",
+    company: "",
+    email: "",
+    message: "",
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -138,7 +220,7 @@ export default function LandingPage() {
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => setHeroVisible(entry.isIntersecting),
-      { threshold: 0 }
+      { threshold: 0 },
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -155,23 +237,28 @@ export default function LandingPage() {
       const rect = timelineRef.current.getBoundingClientRect();
       const viewportTrigger = window.innerHeight * 0.55;
 
-      const progress = Math.max(0, Math.min(1, (viewportTrigger - rect.top) / rect.height));
+      const progress = Math.max(
+        0,
+        Math.min(1, (viewportTrigger - rect.top) / rect.height),
+      );
 
       // Update timeline fill line directly in the DOM — no setState
       if (timelineLineRef.current) {
         timelineLineRef.current.style.height = `${progress * 100}%`;
       }
 
-      const stepEls = timelineRef.current.querySelectorAll<HTMLElement>('[data-timeline-step]');
+      const stepEls = timelineRef.current.querySelectorAll<HTMLElement>(
+        "[data-timeline-step]",
+      );
       stepEls.forEach((el, i) => {
         const isActive = el.getBoundingClientRect().top < viewportTrigger;
-        const wasActive = el.dataset.active === 'true';
+        const wasActive = el.dataset.active === "true";
         if (isActive !== wasActive) {
           el.dataset.active = String(isActive);
           // Toggle CSS class directly — avoids React re-render
-          el.classList.toggle('timeline-step-active', isActive);
-          const dot = el.querySelector<HTMLElement>('[data-timeline-dot]');
-          if (dot) dot.classList.toggle('timeline-dot-active', isActive);
+          el.classList.toggle("timeline-step-active", isActive);
+          const dot = el.querySelector<HTMLElement>("[data-timeline-dot]");
+          if (dot) dot.classList.toggle("timeline-dot-active", isActive);
         }
       });
     };
@@ -184,10 +271,10 @@ export default function LandingPage() {
       });
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     compute();
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener("scroll", onScroll);
       if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
     };
   }, []);
@@ -199,11 +286,15 @@ export default function LandingPage() {
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => {
-        el.querySelectorAll<HTMLElement>('[data-marquee-track]').forEach(track => {
-          track.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
-        });
+        el.querySelectorAll<HTMLElement>("[data-marquee-track]").forEach(
+          (track) => {
+            track.style.animationPlayState = entry.isIntersecting
+              ? "running"
+              : "paused";
+          },
+        );
       },
-      { threshold: 0 }
+      { threshold: 0 },
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -221,12 +312,15 @@ export default function LandingPage() {
     touchStartX.current = e.touches[0].clientX;
   }, []);
 
-  const handleTouchEnd = useCallback((e: ReactTouchEvent) => {
-    const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      goToCase(activeCase + (diff > 0 ? 1 : -1));
-    }
-  }, [activeCase, goToCase]);
+  const handleTouchEnd = useCallback(
+    (e: ReactTouchEvent) => {
+      const diff = touchStartX.current - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        goToCase(activeCase + (diff > 0 ? 1 : -1));
+      }
+    },
+    [activeCase, goToCase],
+  );
 
   // ─── Testimonial slider (mobile) ───
   const testimonialSliderRef = useRef<HTMLDivElement>(null);
@@ -245,7 +339,7 @@ export default function LandingPage() {
     const container = testimonialSliderRef.current;
     if (!container) return;
     const slideWidth = container.scrollWidth / 3;
-    container.scrollTo({ left: slideWidth * index, behavior: 'smooth' });
+    container.scrollTo({ left: slideWidth * index, behavior: "smooth" });
   }, []);
 
   const toggleFaq = (index: number) => {
@@ -256,10 +350,11 @@ export default function LandingPage() {
     e.preventDefault();
     const errors: Record<string, string> = {};
 
-    if (!formData.name.trim()) errors.name = 'Please add your name';
-    if (!formData.company.trim()) errors.company = 'Please add your company name';
-    if (!formData.email.trim() || !formData.email.includes('@')) {
-      errors.email = 'Add your work email';
+    if (!formData.name.trim()) errors.name = "Please add your name";
+    if (!formData.company.trim())
+      errors.company = "Please add your company name";
+    if (!formData.email.trim() || !formData.email.includes("@")) {
+      errors.email = "Add your work email";
     }
 
     if (Object.keys(errors).length > 0) {
@@ -274,9 +369,11 @@ export default function LandingPage() {
   const scrollToContact = () => {
     const lenis = (window as any).lenis;
     if (lenis) {
-      lenis.scrollTo('#contact');
+      lenis.scrollTo("#contact");
     } else {
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+      document
+        .getElementById("contact")
+        ?.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -292,7 +389,7 @@ export default function LandingPage() {
               alt={name}
               width={18}
               height={18}
-              style={{ objectFit: 'contain' }}
+              style={{ objectFit: "contain" }}
             />
           </div>
           <span className={styles.techLogoName}>{name}</span>
@@ -311,13 +408,16 @@ export default function LandingPage() {
           <div className={styles.heroLiquidMetal}>
             <LiquidMetal
               {...liquidMetalPresets[2]}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
             {/* <div className={styles.heroLiquidOverlay} /> */}
           </div>
         )}
 
-        <div className="section-container" style={{ position: 'relative', zIndex: 2 }}>
+        <div
+          className="section-container"
+          style={{ position: "relative", zIndex: 2 }}
+        >
           <motion.div
             className={styles.heroContent}
             initial={{ opacity: 0, y: 16 }}
@@ -331,7 +431,8 @@ export default function LandingPage() {
             </h1>
 
             <p className={styles.heroSubtitle}>
-              We build AI-powered automation systems that eliminate manual work, reduce costs, and multiply your business performance.
+              We build AI-powered automation systems that eliminate manual work,
+              reduce costs, and multiply your business performance.
             </p>
 
             <div className={styles.heroCtaGroup}>
@@ -386,7 +487,11 @@ export default function LandingPage() {
               baseRotation={5}
               blurStrength={10}
             >
-              We help businesses build custom web and mobile applications, streamline operations with CRM and ERP solutions, and implement business management systems. From workflow and process automation to AI-powered internal and customer chatbots, we design intelligent systems that scale with you.
+              We help businesses build custom web and mobile applications,
+              streamline operations with CRM and ERP solutions, and implement
+              business management systems. From workflow and process automation
+              to AI-powered internal and customer chatbots, we design
+              intelligent systems that scale with you.
             </ScrollReveal>
           </div>
 
@@ -430,7 +535,8 @@ export default function LandingPage() {
             <SectionPill index="002" label="VALUES" />
             <h2>Why Choose Us?</h2>
             <p>
-              We build AI-powered automation systems that eliminate manual work, reduce costs, and multiply your business performance.
+              We build AI-powered automation systems that eliminate manual work,
+              reduce costs, and multiply your business performance.
             </p>
           </div>
 
@@ -473,7 +579,10 @@ export default function LandingPage() {
               </div>
               <div className={styles.shellContent}>
                 <h3>Custom-Built Automation</h3>
-                <p>No templates. Every workflow is tailored to your unique operations.</p>
+                <p>
+                  No templates. Every workflow is tailored to your unique
+                  operations.
+                </p>
               </div>
             </div>
           </div>
@@ -488,7 +597,10 @@ export default function LandingPage() {
           <div className={styles.sectionHeader}>
             <SectionPill index="003" label="CAPABILITIES" />
             <h2>Our AI-Driven Services</h2>
-            <p>Engineered automation architectures custom tailored to modern enterprise workflows.</p>
+            <p>
+              Engineered automation architectures custom tailored to modern
+              enterprise workflows.
+            </p>
           </div>
 
           <div className={styles.bentoGrid}>
@@ -497,7 +609,8 @@ export default function LandingPage() {
               <div>
                 <p className={styles.cardParagraph}>
                   <strong>AI Workflow Automation.</strong>
-                  Automate repetitive tasks across departments using intelligent triggers and decision logic.
+                  Automate repetitive tasks across departments using intelligent
+                  triggers and decision logic.
                 </p>
                 <ul className={styles.checklist}>
                   <li>
@@ -516,7 +629,12 @@ export default function LandingPage() {
               </div>
 
               <div className={styles.bentoCardImageWrap}>
-                <Image src="/automation.webp" alt="AI Workflow Automation" fill className={styles.bentoCardImage} />
+                <Image
+                  src="/automation.webp"
+                  alt="AI Workflow Automation"
+                  fill
+                  className={styles.bentoCardImage}
+                />
               </div>
             </div>
 
@@ -524,10 +642,16 @@ export default function LandingPage() {
             <div className={styles.bentoCard}>
               <p className={styles.cardParagraph}>
                 <strong>AI Chatbots & Conversational Agents.</strong>
-                24/7 customer support, lead qualification, booking systems, and AI sales reps.
+                24/7 customer support, lead qualification, booking systems, and
+                AI sales reps.
               </p>
               <div className={styles.bentoCardImageWrap}>
-                <Image src="/agentic_chat.webp" alt="AI Chatbot" fill className={styles.bentoCardImage} />
+                <Image
+                  src="/agentic_chat.webp"
+                  alt="AI Chatbot"
+                  fill
+                  className={styles.bentoCardImage}
+                />
               </div>
             </div>
 
@@ -535,10 +659,16 @@ export default function LandingPage() {
             <div className={styles.bentoCard}>
               <p className={styles.cardParagraph}>
                 <strong>AI Data & Reporting Systems.</strong>
-                Automated dashboards, business intelligence, performance forecasting.
+                Automated dashboards, business intelligence, performance
+                forecasting.
               </p>
               <div className={styles.bentoCardImageWrap}>
-                <Image src="/report.webp" alt="AI Reporting" fill className={styles.bentoCardImage} />
+                <Image
+                  src="/report.webp"
+                  alt="AI Reporting"
+                  fill
+                  className={styles.bentoCardImage}
+                />
               </div>
             </div>
 
@@ -546,10 +676,16 @@ export default function LandingPage() {
             <div className={styles.bentoCard}>
               <p className={styles.cardParagraph}>
                 <strong>CRM & Sales Automation.</strong>
-                Pipeline automation, AI lead scoring, follow-ups, predictive insights.
+                Pipeline automation, AI lead scoring, follow-ups, predictive
+                insights.
               </p>
               <div className={styles.bentoCardImageWrap}>
-                <Image src="/lead_ranking.webp" alt="Lead Ranking" fill className={styles.bentoCardImage} />
+                <Image
+                  src="/lead_ranking.webp"
+                  alt="Lead Ranking"
+                  fill
+                  className={styles.bentoCardImage}
+                />
               </div>
             </div>
 
@@ -557,10 +693,16 @@ export default function LandingPage() {
             <div className={styles.bentoCard}>
               <p className={styles.cardParagraph}>
                 <strong>Marketing Automation.</strong>
-                Email sequences, personalization engines, AI-generated content systems.
+                Email sequences, personalization engines, AI-generated content
+                systems.
               </p>
               <div className={styles.bentoCardImageWrap}>
-                <Image src="/marketing.webp" alt="Marketing Automation" fill className={styles.bentoCardImage} />
+                <Image
+                  src="/marketing.webp"
+                  alt="Marketing Automation"
+                  fill
+                  className={styles.bentoCardImage}
+                />
               </div>
             </div>
           </div>
@@ -578,14 +720,27 @@ export default function LandingPage() {
                   className={styles.hologramAvatar}
                 />
                 <div className={styles.hologramPhoneIcon}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                   </svg>
                 </div>
               </div>
-              <h3 className={styles.hologramHeading}>Not sure what to automate first?</h3>
+              <h3 className={styles.hologramHeading}>
+                Not sure what to automate first?
+              </h3>
               <p className={styles.hologramDesc}>
-                Book a free 30-minute AI strategy session. We&apos;ll analyze your current workflows and identify the highest-ROI automation opportunities for your business.
+                Book a free 30-minute AI strategy session. We&apos;ll analyze
+                your current workflows and identify the highest-ROI automation
+                opportunities for your business.
               </p>
               <a href="#contact" className={styles.primaryPillBtn}>
                 Schedule a Session <ArrowRight />
@@ -594,17 +749,29 @@ export default function LandingPage() {
 
             {/* Card: Security Features */}
             <div className={`${styles.bentoCard} ${styles.securityCard}`}>
-              <h3 className={styles.securityHeading}>Your Data. Protected. Always.</h3>
+              <h3 className={styles.securityHeading}>
+                Your Data. Protected. Always.
+              </h3>
               <div className={styles.securityFeatures}>
                 <div className={styles.securityFeatureItem}>
                   <div className={styles.securityIconWrap}>
-                    <Image src="/encryption.svg" alt="Encryption" width={50} height={50} />
+                    <Image
+                      src="/encryption.svg"
+                      alt="Encryption"
+                      width={50}
+                      height={50}
+                    />
                   </div>
                   <span>End-to-End Encryption</span>
                 </div>
                 <div className={styles.securityFeatureItem}>
                   <div className={styles.securityIconWrap}>
-                    <Image src="/secure_integration.svg" alt="Secure API" width={50} height={50} />
+                    <Image
+                      src="/secure_integration.svg"
+                      alt="Secure API"
+                      width={50}
+                      height={50}
+                    />
                   </div>
                   <span>Secure API Integrations</span>
                 </div>
@@ -616,7 +783,12 @@ export default function LandingPage() {
                 </div>
                 <div className={styles.securityFeatureItem}>
                   <div className={styles.securityIconWrap}>
-                    <Image src="/data_minimize.svg" alt="Data Minimization" width={50} height={50} />
+                    <Image
+                      src="/data_minimize.svg"
+                      alt="Data Minimization"
+                      width={50}
+                      height={50}
+                    />
                   </div>
                   <span>Data Minimization</span>
                 </div>
@@ -644,7 +816,7 @@ export default function LandingPage() {
             <div
               ref={timelineLineRef}
               className={styles.timelineLineFill}
-              style={{ height: '0%' }}
+              style={{ height: "0%" }}
             />
 
             <div className={styles.timelineSteps}>
@@ -680,7 +852,10 @@ export default function LandingPage() {
           <div className={styles.sectionHeader}>
             <SectionPill index="005" label="CASE STUDIES" />
             <h2>What We&apos;ve Built</h2>
-            <p>Real results from businesses that scaled with intelligent automation.</p>
+            <p>
+              Real results from businesses that scaled with intelligent
+              automation.
+            </p>
           </div>
 
           <div
@@ -698,7 +873,7 @@ export default function LandingPage() {
                     alt={cs.title}
                     fill
                     sizes="50vw"
-                    className={`${styles.caseStudyImage} ${i === activeCase ? styles.active : ''}`}
+                    className={`${styles.caseStudyImage} ${i === activeCase ? styles.active : ""}`}
                   />
                 ))}
               </div>
@@ -708,18 +883,24 @@ export default function LandingPage() {
                 {CASE_STUDIES.map((cs, i) => (
                   <div
                     key={i}
-                    className={`${styles.caseStudyDetailsInner} ${i === activeCase ? styles.active : ''}`}
-                    style={{ display: i === activeCase ? 'block' : 'none' }}
+                    className={`${styles.caseStudyDetailsInner} ${i === activeCase ? styles.active : ""}`}
+                    style={{ display: i === activeCase ? "block" : "none" }}
                   >
                     <div className={styles.caseStudyClient}>
-                      <div className={styles.clientLogo}>{cs.clientInitial}</div>
+                      <div className={styles.clientLogo}>
+                        {cs.clientInitial}
+                      </div>
                       <span className={styles.clientName}>{cs.clientName}</span>
                     </div>
                     <h3 className={styles.caseStudyTitle}>{cs.title}</h3>
                     <p className={styles.caseStudyDesc}>{cs.desc}</p>
-                    <button type="button" className={styles.caseStudyReadMore}>
+                    <a
+                      href={cs.link}
+                      target="_blank"
+                      className={styles.caseStudyReadMore}
+                    >
                       Read More <ArrowRight />
-                    </button>
+                    </a>
                     <div className={styles.caseStudyStats}>
                       {cs.stats.map((stat, si) => (
                         <div key={si} className={styles.statBlock}>
@@ -747,7 +928,7 @@ export default function LandingPage() {
                 {CASE_STUDIES.map((_, i) => (
                   <div
                     key={i}
-                    className={`${styles.dot} ${i === activeCase ? styles.activeDot : ''}`}
+                    className={`${styles.dot} ${i === activeCase ? styles.activeDot : ""}`}
                   />
                 ))}
               </div>
@@ -768,7 +949,11 @@ export default function LandingPage() {
           S4. Technology Ecosystem — Logo Marquee
           =================================================================== */}
       {/* P2: marqueesSectionRef pauses all 3 CSS animations when off-screen */}
-      <section id="integrations" className={styles.techEcosystemSection} ref={marqueesSectionRef}>
+      <section
+        id="integrations"
+        className={styles.techEcosystemSection}
+        ref={marqueesSectionRef}
+      >
         <div className={styles.sectionHeader}>
           <SectionPill index="006" label="INTEGRATIONS" />
           <h2>Technology Ecosystem</h2>
@@ -788,30 +973,38 @@ export default function LandingPage() {
             saturation={1.4}
             className={styles.techCenterCircle}
           >
-            <Image
-              src="/logo.png"
-              alt="Slash logo"
-              width={52}
-              height={52}
-            />
+            <Image src="/logo.png" alt="Slash logo" width={52} height={52} />
             <div className={styles.techCenterLabel}>Powered by Slash</div>
           </GlassSurface>
 
           {/* 3 rows of logos — data-marquee-track allows IntersectionObserver to toggle play state */}
           <div className={styles.techMarqueeRows}>
-            <Marquee direction="left" duration={35} trackProps={{ 'data-marquee-track': '' }}>
+            <Marquee
+              direction="left"
+              duration={35}
+              trackProps={{ "data-marquee-track": "" }}
+            >
               {renderTechLogos(TECH_LOGOS_ROW1)}
             </Marquee>
-            <Marquee direction="right" duration={40} trackProps={{ 'data-marquee-track': '' }}>
+            <Marquee
+              direction="right"
+              duration={40}
+              trackProps={{ "data-marquee-track": "" }}
+            >
               {renderTechLogos(TECH_LOGOS_ROW2)}
             </Marquee>
-            <Marquee direction="left" duration={35} trackProps={{ 'data-marquee-track': '' }}>
+            <Marquee
+              direction="left"
+              duration={35}
+              trackProps={{ "data-marquee-track": "" }}
+            >
               {renderTechLogos(TECH_LOGOS_ROW3)}
             </Marquee>
           </div>
 
           <p className={styles.techCaption}>
-            Our automation architecture connects data, workflows, and platforms into a secure, high-performance system that grows with you.
+            Our automation architecture connects data, workflows, and platforms
+            into a secure, high-performance system that grows with you.
           </p>
         </div>
       </section>
@@ -824,7 +1017,10 @@ export default function LandingPage() {
           <div className={styles.sectionHeader}>
             <SectionPill label="TESTIMONIALS" />
             <h2>What They&apos;re Saying</h2>
-            <p>Proven impact from companies scaling with intelligent automated pipelines.</p>
+            <p>
+              Proven impact from companies scaling with intelligent automated
+              pipelines.
+            </p>
           </div>
 
           <div
@@ -837,7 +1033,7 @@ export default function LandingPage() {
               {/* Video Card 1 */}
               <div className={styles.videoCard}>
                 <Image
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"
+                  src="/petals-review.png"
                   alt="Founder interview"
                   width={400}
                   height={300}
@@ -855,9 +1051,9 @@ export default function LandingPage() {
                 <div className={styles.videoBottom}>
                   <div className={styles.videoLogo}>
                     <span />
-                    Logoipsum
+                    Petals
                   </div>
-                  <h4>How Puno Automated 80% of Lead Handling</h4>
+                  <h4>How ERP brought efficiency in our work</h4>
                 </div>
               </div>
 
@@ -866,7 +1062,7 @@ export default function LandingPage() {
                 <div className={styles.quoteTopRow}>
                   <div className={styles.avatarCircle}>
                     <Image
-                      src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80"
+                      src="/petals-review.png"
                       alt="David Lee"
                       width={32}
                       height={32}
@@ -874,17 +1070,24 @@ export default function LandingPage() {
                   </div>
                   <span className={styles.quoteMark}>&ldquo;</span>
                 </div>
-                <div className={styles.authorName}>David Lee</div>
-                <div className={styles.authorRole}>Founder, Atodio Studio</div>
+                <div className={styles.authorName}>Rizwan</div>
+                <div className={styles.authorRole}>
+                  Managing Director, Petals Child Care
+                </div>
                 <div className={styles.quoteText}>
                   <p>
-                    We were spending hours on repetitive tasks. Their automation system saved us 30+ hours per week and dramatically improved our sales performance.
+                    The Petals ERP system has transformed the way we manage our
+                    centre. From client management to scheduling and financial
+                    operations, everything is now streamlined in one place. The
+                    AI-powered features make our daily work faster and more
+                    efficient. We're extremely happy with the solution and the
+                    team's support!
                   </p>
                 </div>
               </div>
 
               {/* Quote Card: Daniel Kim */}
-              <div className={styles.quoteCard}>
+              {/* <div className={styles.quoteCard}>
                 <div className={styles.quoteTopRow}>
                   <div className={styles.avatarCircle}>
                     <Image
@@ -906,7 +1109,7 @@ export default function LandingPage() {
                     We&apos;ve increased enrollment conversion by 35% in just one quarter.
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Column 2 (Starts highest) */}
@@ -924,11 +1127,19 @@ export default function LandingPage() {
                   </div>
                   <span className={styles.quoteMark}>&ldquo;</span>
                 </div>
-                <div className={styles.authorName}>Michael Tran</div>
-                <div className={styles.authorRole}>Founder & CEO, Skyline Realty Group</div>
+                <div className={styles.authorName}>Nishad Puzhithara</div>
+                <div className={styles.authorRole}>
+                  Founder & CEO, Puzhithara Law Firm
+                </div>
                 <div className={styles.quoteText}>
                   <p>
-                    We reduced admin work by nearly 50% and doubled our qualified appointment bookings. The ROI was faster than we expected, and the system continues to scale with us.
+                    The legal management system has significantly streamlined
+                    our firm's daily operations. Managing client records,
+                    tracking cases and organizing legal information is now much
+                    easier and more efficient. The platform has helped us stay
+                    organized and focus more on delivering quality legal
+                    services. We're very happy with the solution and the team's
+                    support!
                   </p>
                 </div>
               </div>
@@ -938,7 +1149,7 @@ export default function LandingPage() {
                 <div className={styles.quoteTopRow}>
                   <div className={styles.avatarCircle}>
                     <Image
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                      src="/anees.png"
                       alt="Sarah Mitchell"
                       width={32}
                       height={32}
@@ -946,20 +1157,24 @@ export default function LandingPage() {
                   </div>
                   <span className={styles.quoteMark}>&ldquo;</span>
                 </div>
-                <div className={styles.authorName}>Sarah Mitchell</div>
-                <div className={styles.authorRole}>COO, BrightPath SaaS</div>
+                <div className={styles.authorName}>Anees</div>
+                <div className={styles.authorRole}>
+                  COO, Steel House Perumbavoor
+                </div>
                 <div className={styles.quoteText}>
                   <p>
-                    We struggled with inconsistent lead follow-ups and slow response times. Their AI automation blueprint gave us clarity first, then execution.
-                  </p>
-                  <p>
-                    Now, our CRM runs intelligently, leads are scored automatically, and follow-ups happen without manual effort. We&apos;ve increased demo bookings by 40% while reducing operational friction.
+                    Working with the team to build our website has been a great
+                    experience. They beautifully showcased our steel products
+                    and business through a modern, professional design. The
+                    website gives our customers a better way to explore our
+                    products and connect with us. We're very happy with the
+                    outcome and the team's support!
                   </p>
                 </div>
               </div>
 
               {/* Quote Card: Jonathan Reed */}
-              <div className={styles.quoteCard}>
+              {/* <div className={styles.quoteCard}>
                 <div className={styles.quoteTopRow}>
                   <div className={styles.avatarCircle}>
                     <Image
@@ -981,7 +1196,7 @@ export default function LandingPage() {
                     The result? 30+ hours saved per week and complete visibility across our pipeline.
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Column 3 (Starts in between) */}
@@ -991,7 +1206,7 @@ export default function LandingPage() {
                 <div className={styles.quoteTopRow}>
                   <div className={styles.avatarCircle}>
                     <Image
-                      src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80"
+                      src="/jithinshah.png"
                       alt="Alex Johnson"
                       width={32}
                       height={32}
@@ -999,11 +1214,18 @@ export default function LandingPage() {
                   </div>
                   <span className={styles.quoteMark}>&ldquo;</span>
                 </div>
-                <div className={styles.authorName}>Alex Johnson</div>
-                <div className={styles.authorRole}>Head of Operations, Innovate Consulting</div>
+                <div className={styles.authorName}>Jithin Shah</div>
+                <div className={styles.authorRole}>
+                  Head of Operations, JB Timber Tech
+                </div>
                 <div className={styles.quoteText}>
                   <p>
-                    Security and compliance were major concerns for us. They designed an automation architecture that was not only efficient but enterprise-grade secure.
+                    The team did an excellent job bringing our manufacturing
+                    business to life through a modern and immersive website.
+                    They beautifully showcased our products, manufacturing
+                    capabilities and brand vision through engaging visuals and a
+                    professional design. We're delighted with the result and the
+                    team's dedication throughout the project!{" "}
                   </p>
                 </div>
               </div>
@@ -1011,7 +1233,7 @@ export default function LandingPage() {
               {/* Video Card 2 */}
               <div className={styles.videoCard}>
                 <Image
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"
+                  src="/jithinshah.png"
                   alt="Executive interview"
                   width={400}
                   height={300}
@@ -1036,7 +1258,7 @@ export default function LandingPage() {
               </div>
 
               {/* Quote Card: Laura Martinez */}
-              <div className={styles.quoteCard}>
+              {/* <div className={styles.quoteCard}>
                 <div className={styles.quoteTopRow}>
                   <div className={styles.avatarCircle}>
                     <Image
@@ -1058,7 +1280,7 @@ export default function LandingPage() {
                     They unified everything into one intelligent ecosystem. Campaign triggers, abandoned cart flows, segmentation: all automated with precision.
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -1107,7 +1329,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-
       {/* ===================================================================
           4.4 Common Questions (FAQ) & 4.5 Contact Form Wrapper
           =================================================================== */}
@@ -1128,24 +1349,24 @@ export default function LandingPage() {
               {[
                 {
                   q: "What industries do you work with?",
-                  a: "We partner across high-growth service businesses, SaaS platforms, education, real estate, specialized digital agencies, and e-commerce brands looking to scale throughput without proportional headcount."
+                  a: "We partner across high-growth service businesses, SaaS platforms, education, real estate, specialized digital agencies, and e-commerce brands looking to scale throughput without proportional headcount.",
                 },
                 {
                   q: "How long does implementation take?",
-                  a: "Most implementations deploy within 2 to 6 weeks. We initiate with a rapid 1-week architecture blueprint, followed by agile development sprints and validated production cutover."
+                  a: "Most implementations deploy within 2 to 6 weeks. We initiate with a rapid 1-week architecture blueprint, followed by agile development sprints and validated production cutover.",
                 },
                 {
                   q: "Do we need technical knowledge to work with you?",
-                  a: "No technical expertise is required from your team. We manage the entire lifecycle—architecture, system integrations, security auditing, and prompt engineering—providing a turnkey handover with simple operator training."
+                  a: "No technical expertise is required from your team. We manage the entire lifecycle—architecture, system integrations, security auditing, and prompt engineering—providing a turnkey handover with simple operator training.",
                 },
                 {
                   q: "Is AI automation secure?",
-                  a: "Security is built-in from day one. We enforce zero-trust isolation, end-to-end encrypted API credentials, strict role-based access controls, and SOC2-compliant data practices."
+                  a: "Security is built-in from day one. We enforce zero-trust isolation, end-to-end encrypted API credentials, strict role-based access controls, and SOC2-compliant data practices.",
                 },
                 {
                   q: "What kind of ROI can we expect?",
-                  a: "Clients typically see measurable ROI within their first quarter. Typical results include 30+ hours saved per week per team, 50% admin reduction, and 35-40% increases in qualified pipeline conversion."
-                }
+                  a: "Clients typically see measurable ROI within their first quarter. Typical results include 30+ hours saved per week per team, 50% admin reduction, and 35-40% increases in qualified pipeline conversion.",
+                },
               ].map((faq, idx) => {
                 const isOpen = openFaqIndex === idx;
                 return (
@@ -1160,15 +1381,17 @@ export default function LandingPage() {
                         <span className={styles.numChip}>{idx + 1}</span>
                         <span className={styles.faqQuestion}>{faq.q}</span>
                       </div>
-                      <div className={`${styles.toggleBtn} ${isOpen ? styles.rotated : ''}`}>
+                      <div
+                        className={`${styles.toggleBtn} ${isOpen ? styles.rotated : ""}`}
+                      >
                         <Plus />
                       </div>
                     </button>
-                    <div className={`${styles.faqAnswerCollapse} ${isOpen ? styles.open : ''}`}>
+                    <div
+                      className={`${styles.faqAnswerCollapse} ${isOpen ? styles.open : ""}`}
+                    >
                       <div className={styles.faqAnswerInner}>
-                        <div className={styles.faqAnswerContent}>
-                          {faq.a}
-                        </div>
+                        <div className={styles.faqAnswerContent}>{faq.a}</div>
                       </div>
                     </div>
                   </div>
