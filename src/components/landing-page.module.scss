@@ -259,6 +259,9 @@
   padding: 7rem 0 6rem 0;
   background: var(--bg);
   overflow: hidden;
+    @media (max-width: 426px) {
+    padding: 0 0 7rem 0;
+  }
 }
 
 .whoWeAreInner {
@@ -347,6 +350,9 @@
 .howWeWorkSection {
   padding: 7rem 0;
   background: var(--bg);
+    @media (max-width: 426px) {
+    padding: 0 0 7rem 0;
+  }
 }
 
 .timelineContainer {
@@ -546,6 +552,9 @@
 .caseStudiesSection {
   padding: 7rem 0;
   background: var(--bg);
+    @media (max-width: 426px) {
+    padding: 0 0 7rem 0;
+  }
 }
 
 .caseStudySlider {
@@ -773,6 +782,9 @@
   padding: 7rem 0 5rem 0;
   background: var(--bg);
   overflow: hidden;
+    @media (max-width: 426px) {
+    padding: 0 0 7rem 0;
+  }
 }
 
 .techEcosystemInner {
@@ -884,6 +896,9 @@
 .teamSection {
   padding: 7rem 0 6rem 0;
   background: var(--bg);
+    @media (max-width: 426px) {
+    padding: 0 0 7rem 0;
+  }
 }
 
 .teamGrid {
@@ -942,6 +957,9 @@
 .testimonialsSection {
   padding: 6rem 0;
   background: var(--bg);
+    @media (max-width: 426px) {
+    padding: 0 0 6rem 0;
+  }
 }
 
 .testimonialMasonry {
@@ -1200,6 +1218,9 @@
 .whyChooseUsSection {
   padding: 6rem 0;
   background: var(--bg);
+    @media (max-width: 426px) {
+    padding: 0 0 6rem 0;
+  }
 }
 
 .whyChooseUsGrid {
@@ -1306,6 +1327,9 @@
 .servicesSection {
   padding: 6rem 0;
   background: var(--bg);
+    @media (max-width: 426px) {
+    padding: 0 0 6rem 0;
+  }
 }
 
 .bentoGrid {

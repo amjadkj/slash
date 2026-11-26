@@ -171,7 +171,7 @@ export default function Footer() {
         {/* </div> */}
 
         {/* ── Social Links ─────────────────────────────────────────────── */}
-        <div className={styles.socialRow}>
+        {/* <div className={styles.socialRow}>
           {[
             { badge: 'in', label: 'LinkedIn',   href: 'https://linkedin.com' },
             { badge: 'ig', label: 'Instagram',  href: 'https://instagram.com' },
@@ -184,7 +184,7 @@ export default function Footer() {
               <ArrowUpRight className={styles.socialArrow} />
             </a>
           ))}
-        </div>
+        </div> */}
 
         {/* ── Divider ──────────────────────────────────────────────────── */}
         <div className={styles.dividerLine} />
